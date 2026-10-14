@@ -87,3 +87,20 @@ class TelegramAuthRequest(BaseModel):
     username: Optional[str] = None
     first_name: Optional[str] = None
     last_name: Optional[str] = None
+
+
+class LoginTokenRequest(BaseModel):
+    """Request schema for requesting login via deep link."""
+    pass
+
+
+class LoginTokenResponse(BaseModel):
+    """Response with one-time token and deep link."""
+    token: str
+    deep_link: str
+    expires_in: int  # seconds
+
+
+class LoginCompleteRequest(BaseModel):
+    """Request schema for completing login with token."""
+    token: str

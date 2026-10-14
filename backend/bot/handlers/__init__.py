@@ -6,13 +6,16 @@ sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
 from aiogram import Router, F
 from aiogram.types import Message, CallbackQuery
-from aiogram.filters import Command
+from aiogram.filters import Command, CommandStart
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from datetime import datetime, timedelta
 from sqlalchemy.orm import Session
 from app.database import SessionLocal
 from app.models import User, Deadline
+from app.auth import create_access_token
+import os
+import httpx
 from bot.keyboards import (
     get_main_menu,
     get_priority_keyboard,
@@ -36,6 +39,65 @@ def get_db():
         return db
     finally:
         db.close()
+
+
+@router.message(CommandStart(deep_link=True))
+async def cmd_start_deep_link(message: Message):
+    """Handle /start with deep link parameter."""
+    args = message.text.split(maxsplit=1)
+    
+    if len(args) < 2:
+        # No deep link - regular start
+        await cmd_start(message)
+        return
+    
+    param = args[1]
+    
+    if param.startswith("login_"):
+        # Login flow
+        login_token = param[6:]  # Remove "login_" prefix
+        
+        db = SessionLocal()
+        try:
+            user = db.query(User).filter(User.telegram_id == message.from_user.id).first()
+            
+            if not user:
+                user = User(
+                    telegram_id=message.from_user.id,
+                    username=message.from_user.username,
+                    first_name=message.from_user.first_name,
+                    last_name=message.from_user.last_name
+                )
+                db.add(user)
+                db.commit()
+                db.refresh(user)
+            
+            # Generate JWT
+            jwt_token = create_access_token(
+                data={"sub": str(user.id), "telegram_id": user.telegram_id}
+            )
+            
+            backend_url = os.getenv("BACKEND_URL", "http://backend:8000")
+            async with httpx.AsyncClient() as client:
+                await client.post(
+                    f"{backend_url}/auth/store-jwt",
+                    params={
+                        "login_token": login_token,
+                        "jwt": jwt_token,
+                        "user_id": user.id
+                    }
+                )
+            
+            await message.answer(
+                f"✅ Авторизация успешна!\n\n"
+                f"Теперь можешь вернуться в веб-интерфейс.\n"
+                f"Окно браузера обновится автоматически."
+            )
+        finally:
+            db.close()
+    else:
+        # Unknown parameter - regular start
+        await cmd_start(message)
 
 
 @router.message(Command("start"))
