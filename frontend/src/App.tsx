@@ -115,7 +115,7 @@ function App() {
             />
           </div>
 
-          <div className="space-y-6">
+          <div className="space-y-6 relative">
             {showForm && (
               <DeadlineForm
                 onSubmit={handleCreateDeadline}
@@ -128,7 +128,7 @@ function App() {
               />
             )}
 
-            <div className="bg-slate-900/80 backdrop-blur-sm rounded-2xl shadow-xl shadow-slate-950/50 p-6 border border-slate-800/50">
+            <div className="bg-slate-900/80 backdrop-blur-sm rounded-2xl shadow-xl shadow-slate-950/50 p-6 border border-slate-800/50 relative z-10">
               <h2 className="text-xl font-bold text-slate-50 mb-4 tracking-tight">Upcoming Deadlines</h2>
               <div className="space-y-3">
                 {deadlines

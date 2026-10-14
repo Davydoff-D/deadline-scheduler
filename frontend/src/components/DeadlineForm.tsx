@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { DateTimePicker } from './DateTimePicker';
+import { PrioritySelect } from './PrioritySelect';
 import type { DeadlineCreate } from '../types';
 
 interface DeadlineFormProps {
@@ -111,16 +112,11 @@ export function DeadlineForm({
         <label className="block text-sm font-medium text-slate-300 mb-2">
           Priority
         </label>
-        <select
+        <PrioritySelect
           value={priority}
-          onChange={(e) => setPriority(e.target.value as any)}
-          className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-slate-100 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+          onChange={setPriority}
           disabled={loading}
-        >
-          <option value="low">🟢 Low</option>
-          <option value="medium">🟡 Medium</option>
-          <option value="high">🔴 High</option>
-        </select>
+        />
       </div>
 
       <div className="flex gap-3 justify-end pt-2">
