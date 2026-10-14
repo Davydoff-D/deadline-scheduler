@@ -1,5 +1,4 @@
 import ReactDatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
 
 interface DateTimePickerProps {
   selected: Date | null;
@@ -26,6 +25,8 @@ export function DateTimePicker({
       placeholderText={placeholderText}
       className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
       calendarClassName="dark-calendar"
+      popperClassName="deadline-datepicker-popper"
+      popperPlacement="bottom-start"
       wrapperClassName="w-full"
       timeCaption="Время"
     />
