@@ -137,11 +137,27 @@ textarea {
   z-index: 9999 !important;
 }
 
+.deadline-datepicker-popper {
+  margin-top: 0.5rem;
+}
+
 .deadline-datepicker-popper .react-datepicker,
 .react-datepicker {
   @apply bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl shadow-slate-950/50;
+  display: flex;
+  width: max-content;
+  max-width: calc(100vw - 1rem);
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   backdrop-filter: blur(8px);
+}
+
+.deadline-datepicker-popper .react-datepicker__month-container,
+.react-datepicker__month-container {
+  width: 19rem;
+}
+
+.deadline-datepicker-popper .react-datepicker__month {
+  margin: 0.75rem;
 }
 
 .deadline-datepicker-popper .react-datepicker__header,
@@ -201,6 +217,7 @@ textarea {
 
 .react-datepicker__time-container {
   @apply border-l border-slate-700;
+  width: 5.5rem;
 }
 
 .react-datepicker__time-box {
@@ -214,6 +231,12 @@ textarea {
 .react-datepicker__time-list-item {
   @apply text-slate-300 hover:bg-indigo-600/30 transition-colors;
   padding: 0.5rem 0 !important;
+}
+
+.deadline-datepicker-popper .react-datepicker__time-list,
+.react-datepicker__time-list {
+  max-height: 14rem;
+  overflow-y: auto;
 }
 
 .react-datepicker__time-list-item--selected {
