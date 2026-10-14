@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   backend:
     build:
@@ -11,14 +9,12 @@ services:
     environment:
       - BOT_TOKEN=${BOT_TOKEN}
       - JWT_SECRET=${JWT_SECRET}
-      - DATABASE_URL=sqlite:///./deadline_scheduler.db
+      - DATABASE_URL=sqlite:////app/data/deadline_scheduler.db
       - CORS_ORIGINS=http://localhost:3000,http://localhost:5173
     volumes:
       - ./backend:/app
-      - ./backend/deadline_scheduler.db:/app/deadline_scheduler.db
+      - db_data:/app/data
     command: python -m uvicorn main:app --host 0.0.0.0 --port 8000 --reload
-    depends_on:
-      - bot
 
   bot:
     build:
@@ -28,13 +24,11 @@ services:
     environment:
       - BOT_TOKEN=${BOT_TOKEN}
       - JWT_SECRET=${JWT_SECRET}
-      - DATABASE_URL=sqlite:///./deadline_scheduler.db
+      - DATABASE_URL=sqlite:////app/data/deadline_scheduler.db
     volumes:
       - ./backend:/app
-      - ./backend/deadline_scheduler.db:/app/deadline_scheduler.db
+      - db_data:/app/data
     command: python bot.py
-    depends_on:
-      - backend
 
   frontend:
     build:

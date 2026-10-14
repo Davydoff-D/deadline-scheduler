@@ -1,3 +1,9 @@
+import sys
+from pathlib import Path
+
+# Add parent directory to path for imports
+sys.path.insert(0, str(Path(__file__).parent.parent.parent))
+
 from aiogram import Router, F
 from aiogram.types import Message, CallbackQuery
 from aiogram.filters import Command
@@ -5,9 +11,9 @@ from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from datetime import datetime, timedelta
 from sqlalchemy.orm import Session
-from ...app.database import SessionLocal
-from ...app.models import User, Deadline
-from ..keyboards import (
+from app.database import SessionLocal
+from app.models import User, Deadline
+from bot.keyboards import (
     get_main_menu,
     get_priority_keyboard,
     get_deadline_actions,

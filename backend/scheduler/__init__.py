@@ -1,9 +1,14 @@
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).parent.parent))
+
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.cron import CronTrigger
 from datetime import datetime, timedelta
 from sqlalchemy.orm import Session
-from ..app.database import SessionLocal
-from ..app.models import Deadline, User
+from app.database import SessionLocal
+from app.models import Deadline, User
 import logging
 
 logger = logging.getLogger(__name__)

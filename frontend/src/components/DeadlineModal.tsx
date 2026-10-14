@@ -34,54 +34,54 @@ export function DeadlineModal({
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg shadow-xl max-w-md w-full mx-4 p-6">
-        <div className="flex justify-between items-start mb-4">
-          <h2 className="text-2xl font-bold text-gray-900">{deadline.title}</h2>
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50">
+      <div className="bg-slate-900 rounded-2xl shadow-2xl shadow-slate-950/80 max-w-md w-full mx-4 p-8 border border-slate-700/50">
+        <div className="flex justify-between items-start mb-6">
+          <h2 className="text-2xl font-bold text-slate-50 pr-4">{deadline.title}</h2>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600"
+            className="text-slate-500 hover:text-slate-300 transition-colors text-2xl leading-none"
             disabled={loading}
           >
             ✕
           </button>
         </div>
 
-        <div className="space-y-3 mb-6">
-          <div>
-            <span className="text-sm font-medium text-gray-500">Due Date:</span>
-            <p className="text-gray-900">
+        <div className="space-y-4 mb-8">
+          <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700/30">
+            <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Due Date</span>
+            <p className="text-slate-100 mt-1">
               {new Date(deadline.due_date).toLocaleString()}
             </p>
           </div>
 
-          <div>
-            <span className="text-sm font-medium text-gray-500">Priority:</span>
-            <p className="text-gray-900">
+          <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700/30">
+            <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Priority</span>
+            <p className="text-slate-100 mt-1">
               {priorityEmoji} {deadline.priority.charAt(0).toUpperCase() + deadline.priority.slice(1)}
             </p>
           </div>
 
           {deadline.description && (
-            <div>
-              <span className="text-sm font-medium text-gray-500">Description:</span>
-              <p className="text-gray-900 whitespace-pre-wrap">{deadline.description}</p>
+            <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700/30">
+              <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Description</span>
+              <p className="text-slate-100 whitespace-pre-wrap mt-1">{deadline.description}</p>
             </div>
           )}
 
-          <div>
-            <span className="text-sm font-medium text-gray-500">Status:</span>
-            <p className="text-gray-900">
+          <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700/30">
+            <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Status</span>
+            <p className="text-slate-100 mt-1">
               {deadline.is_completed ? '✅ Completed' : '⏳ Pending'}
             </p>
           </div>
         </div>
 
-        <div className="flex gap-2">
+        <div className="flex gap-3">
           {!deadline.is_completed && (
             <button
               onClick={handleComplete}
-              className="flex-1 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:bg-gray-400"
+              className="flex-1 px-4 py-3 bg-gradient-to-r from-emerald-600 to-emerald-500 text-white rounded-xl hover:from-emerald-500 hover:to-emerald-400 transition-all duration-200 font-medium shadow-lg shadow-emerald-500/30 disabled:from-slate-600 disabled:to-slate-600"
               disabled={loading}
             >
               {loading ? 'Processing...' : 'Mark Complete'}
@@ -89,7 +89,7 @@ export function DeadlineModal({
           )}
           <button
             onClick={handleDelete}
-            className="flex-1 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 disabled:bg-gray-400"
+            className="flex-1 px-4 py-3 bg-gradient-to-r from-rose-600 to-rose-500 text-white rounded-xl hover:from-rose-500 hover:to-rose-400 transition-all duration-200 font-medium shadow-lg shadow-rose-500/30 disabled:from-slate-600 disabled:to-slate-600"
             disabled={loading}
           >
             {loading ? 'Deleting...' : 'Delete'}

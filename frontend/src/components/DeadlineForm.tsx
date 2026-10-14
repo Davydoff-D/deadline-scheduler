@@ -53,37 +53,37 @@ export function DeadlineForm({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 bg-white rounded-lg shadow p-6">
-      <h2 className="text-2xl font-bold text-gray-900">Add Deadline</h2>
+    <form onSubmit={handleSubmit} className="space-y-4 bg-slate-900 rounded-2xl shadow-xl shadow-slate-950/50 p-6">
+      <h2 className="text-2xl font-bold text-slate-50">Add Deadline</h2>
 
       {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+        <div className="bg-red-950/50 border border-red-800 text-red-300 px-4 py-3 rounded-xl backdrop-blur-sm">
           {error}
         </div>
       )}
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block text-sm font-medium text-slate-300 mb-2">
           Title *
         </label>
         <input
           type="text"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+          className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
           placeholder="Enter deadline title"
           disabled={loading}
         />
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block text-sm font-medium text-slate-300 mb-2">
           Description
         </label>
         <textarea
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+          className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
           placeholder="Enter deadline description"
           rows={3}
           disabled={loading}
@@ -91,26 +91,26 @@ export function DeadlineForm({
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block text-sm font-medium text-slate-300 mb-2">
           Due Date *
         </label>
         <input
           type="datetime-local"
           value={dueDate}
           onChange={(e) => setDueDate(e.target.value)}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+          className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-slate-100 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
           disabled={loading}
         />
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block text-sm font-medium text-slate-300 mb-2">
           Priority
         </label>
         <select
           value={priority}
           onChange={(e) => setPriority(e.target.value as any)}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+          className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-slate-100 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
           disabled={loading}
         >
           <option value="low">🟢 Low</option>
@@ -119,18 +119,18 @@ export function DeadlineForm({
         </select>
       </div>
 
-      <div className="flex gap-2 justify-end">
+      <div className="flex gap-3 justify-end pt-2">
         <button
           type="button"
           onClick={onCancel}
-          className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+          className="px-6 py-2 border border-slate-600 rounded-xl text-slate-300 hover:bg-slate-800 hover:border-slate-500 transition-all duration-200"
           disabled={loading}
         >
           Cancel
         </button>
         <button
           type="submit"
-          className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 disabled:bg-gray-400"
+          className="px-6 py-2 bg-gradient-to-r from-purple-600 to-purple-500 text-white rounded-xl hover:from-purple-500 hover:to-purple-400 transition-all duration-200 shadow-lg shadow-purple-500/30 disabled:from-slate-600 disabled:to-slate-600"
           disabled={loading}
         >
           {loading ? 'Creating...' : 'Create Deadline'}

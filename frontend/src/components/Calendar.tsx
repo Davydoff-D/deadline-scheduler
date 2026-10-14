@@ -66,7 +66,7 @@ export function Calendar({
   };
 
   return (
-    <div className="w-full bg-white rounded-lg shadow p-6">
+    <div className="w-full bg-slate-900 rounded-2xl shadow-xl shadow-slate-950/50 p-6">
       <FullCalendar
         ref={calendarRef}
         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}

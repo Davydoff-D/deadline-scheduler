@@ -80,14 +80,14 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <header className="bg-white shadow">
+    <div className="min-h-screen bg-slate-950">
+      <header className="bg-slate-900 shadow-lg shadow-slate-950/50">
         <div className="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center">
-            <h1 className="text-3xl font-bold text-gray-900">Deadline Scheduler</h1>
+            <h1 className="text-3xl font-bold text-slate-50">Deadline Scheduler</h1>
             <button
               onClick={() => setShowForm(true)}
-              className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700"
+              className="px-6 py-3 bg-gradient-to-r from-purple-600 to-purple-500 text-white rounded-2xl hover:from-purple-500 hover:to-purple-400 transition-all duration-200 shadow-lg shadow-purple-500/30 font-medium"
             >
               + Add Deadline
             </button>
@@ -97,7 +97,7 @@ function App() {
 
       <main className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
         {error && (
-          <div className="mb-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+          <div className="mb-4 bg-red-950/50 border border-red-800 text-red-300 px-6 py-4 rounded-2xl backdrop-blur-sm">
             {error}
           </div>
         )}
@@ -125,9 +125,9 @@ function App() {
               />
             )}
 
-            <div className="bg-white rounded-lg shadow p-6">
-              <h2 className="text-xl font-bold text-gray-900 mb-4">Upcoming Deadlines</h2>
-              <div className="space-y-2">
+            <div className="bg-slate-900 rounded-2xl shadow-xl shadow-slate-950/50 p-6">
+              <h2 className="text-xl font-bold text-slate-50 mb-4">Upcoming Deadlines</h2>
+              <div className="space-y-3">
                 {deadlines
                   .filter((d) => !d.is_completed && new Date(d.due_date) > new Date())
                   .sort((a, b) => new Date(a.due_date).getTime() - new Date(b.due_date).getTime())
@@ -136,12 +136,12 @@ function App() {
                     <div
                       key={deadline.id}
                       onClick={() => setSelectedDeadline(deadline)}
-                      className="p-3 border border-gray-200 rounded cursor-pointer hover:bg-gray-50"
+                      className="p-4 bg-slate-800/50 border border-slate-700/50 rounded-xl cursor-pointer hover:bg-slate-800 hover:border-slate-600 transition-all duration-200"
                     >
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
-                          <p className="font-medium text-gray-900">{deadline.title}</p>
-                          <p className="text-sm text-gray-500">
+                          <p className="font-medium text-slate-100">{deadline.title}</p>
+                          <p className="text-sm text-slate-400 mt-1">
                             {new Date(deadline.due_date).toLocaleDateString()}
                           </p>
                         </div>
@@ -152,7 +152,7 @@ function App() {
                     </div>
                   ))}
                 {deadlines.filter((d) => !d.is_completed && new Date(d.due_date) > new Date()).length === 0 && (
-                  <p className="text-gray-500 text-center py-4">No upcoming deadlines</p>
+                  <p className="text-slate-500 text-center py-8">No upcoming deadlines</p>
                 )}
               </div>
             </div>
