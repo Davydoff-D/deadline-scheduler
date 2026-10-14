@@ -84,6 +84,8 @@ def update_deadline(
         )
 
     update_data = deadline_update.model_dump(exclude_unset=True)
+    if "due_date" in update_data:
+        db_deadline.reminder_sent = False
     for key, value in update_data.items():
         setattr(db_deadline, key, value)
 
