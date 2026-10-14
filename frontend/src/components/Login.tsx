@@ -1,82 +1,94 @@
-import { useEffect } from 'react';
-
-interface TelegramUser {
-  id: number;
-  first_name: string;
-  last_name?: string;
-  username?: string;
-  photo_url?: string;
-  auth_date: number;
-  hash: string;
-}
+import { useState } from 'react';
 
 interface LoginProps {
   onLogin: (token: string) => void;
 }
 
-declare global {
-  interface Window {
-    TelegramLoginWidget?: {
-      dataOnauth?: (user: TelegramUser) => void;
-    };
-  }
-}
-
 export function Login({ onLogin }: LoginProps) {
-  useEffect(() => {
-    // Load Telegram widget script
-    const script = document.createElement('script');
-    script.src = 'https://telegram.org/js/telegram-widget.js?22';
-    script.async = true;
-    script.setAttribute('data-telegram-login', import.meta.env.VITE_BOT_USERNAME || 'aisheduler_bot');
-    script.setAttribute('data-size', 'large');
-    script.setAttribute('data-radius', '20');
-    script.setAttribute('data-auth-url', window.location.origin + '/auth/callback');
-    script.setAttribute('data-request-access', 'write');
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-    const container = document.getElementById('telegram-login-container');
-    if (container) {
-      container.appendChild(script);
-    }
+  const handleLogin = async () => {
+    setIsLoading(true);
+    setError(null);
 
-    // Handle Telegram auth callback
-    window.TelegramLoginWidget = window.TelegramLoginWidget || {};
-    window.TelegramLoginWidget.dataOnauth = async (user: TelegramUser) => {
-      try {
-        const response = await fetch(
-          `${import.meta.env.VITE_API_URL || 'http://localhost:8000'}/auth/telegram`,
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              telegram_id: user.id,
-              username: user.username,
-              first_name: user.first_name,
-              last_name: user.last_name,
-            }),
-          }
-        );
-
-        if (response.ok) {
-          const data = await response.json();
-          localStorage.setItem('access_token', data.access_token);
-          onLogin(data.access_token);
-        } else {
-          console.error('Authentication failed:', await response.text());
+    try {
+      // Request login token from backend
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL || 'http://localhost:8000'}/auth/request-login`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({}),
         }
-      } catch (error) {
-        console.error('Authentication error:', error);
-      }
-    };
+      );
 
-    return () => {
-      if (container) {
-        container.innerHTML = '';
+      if (!response.ok) {
+        throw new Error('Failed to request login token');
       }
-    };
-  }, [onLogin]);
+
+      const data = await response.json();
+      const loginToken = data.token;
+      const deepLink = data.deep_link;
+
+      // Open Telegram bot with deep link
+      window.open(deepLink, '_blank');
+
+      // Start polling for JWT token
+      const maxAttempts = 60; // 60 attempts * 1 second = 1 minute
+      let attempts = 0;
+
+      const pollInterval = setInterval(async () => {
+        attempts++;
+
+        if (attempts > maxAttempts) {
+          clearInterval(pollInterval);
+          setIsLoading(false);
+          setError('Время ожидания истекло. Попробуйте снова.');
+          return;
+        }
+
+        try {
+          const pollResponse = await fetch(
+            `${import.meta.env.VITE_API_URL || 'http://localhost:8000'}/auth/complete-login`,
+            {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ token: loginToken }),
+            }
+          );
+
+          // 200 = JWT ready
+          if (pollResponse.status === 200) {
+            const pollData = await pollResponse.json();
+            
+            if (pollData.access_token) {
+              clearInterval(pollInterval);
+              localStorage.setItem('access_token', pollData.access_token);
+              onLogin(pollData.access_token);
+            }
+          } else if (pollResponse.status === 202) {
+            
+          } else {
+            clearInterval(pollInterval);
+            setIsLoading(false);
+            setError('Ошибка авторизации. Попробуйте снова.');
+          }
+        } catch (pollError) {
+          console.error('Polling error:', pollError);
+        }
+      }, 1000); // Poll every 1 second
+
+    } catch (err) {
+      console.error('Login error:', err);
+      setError('Ошибка при попытке входа. Попробуйте снова.');
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-slate-950 flex items-center justify-center px-4">
@@ -96,9 +108,30 @@ export function Login({ onLogin }: LoginProps) {
               Войти через Telegram
             </h2>
             <p className="text-slate-400 text-sm mb-6">
-              Используйте ваш Telegram аккаунт для доступа к календарю дедлайнов
+              Нажмите кнопку ниже, чтобы открыть бота и завершить авторизацию
             </p>
-            <div id="telegram-login-container" className="flex justify-center"></div>
+            
+            {error && (
+              <div className="mb-4 p-3 bg-red-500/10 border border-red-500/50 rounded-lg text-red-400 text-sm">
+                {error}
+              </div>
+            )}
+
+            {isLoading ? (
+              <div className="text-center">
+                <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-500 mb-3"></div>
+                <p className="text-slate-400 text-sm">
+                  Ожидание подтверждения в Telegram...
+                </p>
+              </div>
+            ) : (
+              <button
+                onClick={handleLogin}
+                className="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-3 px-6 rounded-xl transition-colors duration-200 shadow-lg shadow-indigo-600/30"
+              >
+                Войти через Telegram
+              </button>
+            )}
           </div>
 
           <div className="text-center">

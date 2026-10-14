@@ -22,17 +22,23 @@ export function Calendar({
   const calendarRef = useRef(null);
 
   const events = deadlines.map((deadline) => {
-    const priorityColor = {
-      high: '#dc2626',
-      medium: '#f59e0b',
-      low: '#10b981',
-    }[deadline.priority];
+    // Use gray for completed deadlines, otherwise use priority colors
+    const priorityColor = deadline.is_completed
+      ? '#64748b'  // slate-500 - gray for completed
+      : {
+          high: '#dc2626',    // red-600
+          medium: '#f59e0b',  // amber-500
+          low: '#10b981',     // emerald-500
+        }[deadline.priority];
+
+    // Extract date-only string (YYYY-MM-DD) to prevent events from spanning across cells
+    const dateOnly = deadline.due_date.split('T')[0];
 
     return {
       id: deadline.id.toString(),
       title: deadline.title,
-      start: deadline.due_date,
-      end: deadline.due_date,
+      start: dateOnly,
+      allDay: true,  // Force all-day event to stay in single cell
       backgroundColor: priorityColor,
       borderColor: priorityColor,
       extendedProps: {
