@@ -59,7 +59,7 @@ export function DeadlineForm({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 bg-slate-900/80 backdrop-blur-sm rounded-2xl shadow-xl shadow-slate-950/50 p-6 border border-slate-800/50">
+    <form onSubmit={handleSubmit} className="relative z-20 space-y-4 bg-slate-900/80 backdrop-blur-sm rounded-2xl shadow-xl shadow-slate-950/50 p-6 border border-slate-800/50">
       <h2 className="text-2xl font-bold text-slate-50 tracking-tight">Add Deadline</h2>
 
       {error && (

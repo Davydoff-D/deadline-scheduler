@@ -61,7 +61,7 @@ export function PrioritySelect({ value, onChange, disabled = false }: PrioritySe
       </button>
 
       {isOpen && (
-        <div className="absolute z-50 w-full mt-2 bg-slate-800 border border-slate-700 rounded-xl shadow-2xl shadow-slate-950/50 overflow-hidden backdrop-blur-sm">
+        <div className="absolute z-[10000] w-full mt-2 bg-slate-800 border border-slate-700 rounded-xl shadow-2xl shadow-slate-950/50 overflow-hidden backdrop-blur-sm">
           {priorities.map((option) => (
             <button
               key={option.value}
