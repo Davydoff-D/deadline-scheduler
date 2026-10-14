@@ -8,7 +8,7 @@ def get_main_menu() -> InlineKeyboardMarkup:
         [InlineKeyboardButton(text="📅 Сегодня", callback_data="today")],
         [InlineKeyboardButton(text="📆 На неделю", callback_data="week")],
         [InlineKeyboardButton(text="✅ Завершенные", callback_data="completed")],
-        [InlineKeyboardButton(text="🔗 Открыть веб-интерфейс", url="http://localhost:3000")]
+        [InlineKeyboardButton(text="🔗 Открыть веб-интерфейс", url="http://localhost:5173")]
     ])
     return keyboard
 
