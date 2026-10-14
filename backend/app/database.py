@@ -1,5 +1,5 @@
 import os
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, inspect, text
 from sqlalchemy.orm import declarative_base, sessionmaker, Session
 from typing import Generator
 
@@ -27,3 +27,15 @@ def get_db() -> Generator[Session, None, None]:
 def init_db():
     """Initialize database tables."""
     Base.metadata.create_all(bind=engine)
+
+    if "sqlite" in DATABASE_URL:
+        columns = inspect(engine).get_columns("deadlines")
+        column_names = {column["name"] for column in columns}
+        if "reminder_sent" not in column_names:
+            with engine.begin() as connection:
+                connection.execute(
+                    text(
+                        "ALTER TABLE deadlines "
+                        "ADD COLUMN reminder_sent BOOLEAN NOT NULL DEFAULT 0"
+                    )
+                )
