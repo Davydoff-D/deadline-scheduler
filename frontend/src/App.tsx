@@ -81,15 +81,18 @@ function App() {
 
   return (
     <div className="min-h-screen bg-slate-950">
-      <header className="bg-slate-900 shadow-lg shadow-slate-950/50">
+      <header className="bg-slate-900 shadow-lg shadow-slate-950/50 border-b border-slate-800/50">
         <div className="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center">
-            <h1 className="text-3xl font-bold text-slate-50">Deadline Scheduler</h1>
+            <div>
+              <h1 className="text-3xl font-bold text-slate-50 tracking-tight">Deadline Scheduler</h1>
+              <p className="text-slate-400 text-sm mt-1">Stay organized, never miss a deadline</p>
+            </div>
             <button
               onClick={() => setShowForm(true)}
-              className="px-6 py-3 bg-gradient-to-r from-purple-600 to-purple-500 text-white rounded-2xl hover:from-purple-500 hover:to-purple-400 transition-all duration-200 shadow-lg shadow-purple-500/30 font-medium"
+              className="px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-2xl hover:from-indigo-500 hover:to-purple-500 transition-all duration-200 shadow-lg shadow-indigo-500/30 font-semibold"
             >
-              + Add Deadline
+              + New Deadline
             </button>
           </div>
         </div>
@@ -125,8 +128,8 @@ function App() {
               />
             )}
 
-            <div className="bg-slate-900 rounded-2xl shadow-xl shadow-slate-950/50 p-6">
-              <h2 className="text-xl font-bold text-slate-50 mb-4">Upcoming Deadlines</h2>
+            <div className="bg-slate-900/80 backdrop-blur-sm rounded-2xl shadow-xl shadow-slate-950/50 p-6 border border-slate-800/50">
+              <h2 className="text-xl font-bold text-slate-50 mb-4 tracking-tight">Upcoming Deadlines</h2>
               <div className="space-y-3">
                 {deadlines
                   .filter((d) => !d.is_completed && new Date(d.due_date) > new Date())

@@ -66,7 +66,7 @@ export function Calendar({
   };
 
   return (
-    <div className="w-full bg-slate-900 rounded-2xl shadow-xl shadow-slate-950/50 p-6">
+    <div className="w-full bg-slate-900/80 backdrop-blur-sm rounded-2xl shadow-2xl shadow-slate-950/50 p-6 border border-slate-800/50">
       <FullCalendar
         ref={calendarRef}
         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
@@ -85,6 +85,7 @@ export function Calendar({
         height="auto"
         dayMaxEvents={3}
         eventDisplay="block"
+        firstDay={1}
       />
     </div>
   );
