@@ -208,7 +208,8 @@ textarea {
 }
 
 .react-datepicker__time-list-item--selected {
-  @apply bg-gradient-to-r from-indigo-600 to-purple-600 text-white !important;
+  @apply bg-gradient-to-r from-indigo-600 to-purple-600 text-white;
+  background: linear-gradient(to right, rgb(79 70 229), rgb(147 51 234)) !important;
 }
 
 .react-datepicker__time-list-item:hover {
