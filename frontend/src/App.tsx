@@ -2,10 +2,12 @@ import { useState, useEffect } from 'react';
 import { Calendar } from './components/Calendar';
 import { DeadlineForm } from './components/DeadlineForm';
 import { DeadlineModal } from './components/DeadlineModal';
+import { Login } from './components/Login';
 import { apiClient } from './api/client';
 import type { Deadline, DeadlineCreate } from './types';
 
 function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [deadlines, setDeadlines] = useState<Deadline[]>([]);
   const [selectedDeadline, setSelectedDeadline] = useState<Deadline | null>(null);
   const [showForm, setShowForm] = useState(false);
@@ -14,7 +16,12 @@ function App() {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    loadDeadlines();
+    // Check if user is already authenticated
+    const token = localStorage.getItem('access_token');
+    if (token) {
+      setIsAuthenticated(true);
+      loadDeadlines();
+    }
   }, []);
 
   const loadDeadlines = async () => {
@@ -79,6 +86,21 @@ function App() {
     setSelectedDeadline(deadline);
   };
 
+  const handleLogin = () => {
+    setIsAuthenticated(true);
+    loadDeadlines();
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('access_token');
+    setIsAuthenticated(false);
+    setDeadlines([]);
+  };
+
+  if (!isAuthenticated) {
+    return <Login onLogin={handleLogin} />;
+  }
+
   return (
     <div className="min-h-screen bg-slate-950">
       <header className="bg-slate-900 shadow-lg shadow-slate-950/50 border-b border-slate-800/50">
@@ -88,12 +110,20 @@ function App() {
               <h1 className="text-3xl font-bold text-slate-50 tracking-tight">Deadline Scheduler</h1>
               <p className="text-slate-400 text-sm mt-1">Stay organized, never miss a deadline</p>
             </div>
-            <button
-              onClick={() => setShowForm(true)}
-              className="px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-2xl hover:from-indigo-500 hover:to-purple-500 transition-all duration-200 shadow-lg shadow-indigo-500/30 font-semibold"
-            >
-              + New Deadline
-            </button>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowForm(true)}
+                className="px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-2xl hover:from-indigo-500 hover:to-purple-500 transition-all duration-200 shadow-lg shadow-indigo-500/30 font-semibold"
+              >
+                + New Deadline
+              </button>
+              <button
+                onClick={handleLogout}
+                className="px-6 py-3 bg-slate-800 text-slate-300 rounded-2xl hover:bg-slate-700 transition-all duration-200 border border-slate-700"
+              >
+                Выйти
+              </button>
+            </div>
           </div>
         </div>
       </header>

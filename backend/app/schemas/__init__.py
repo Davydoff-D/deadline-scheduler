@@ -46,7 +46,7 @@ class DeadlineResponse(DeadlineBase):
     user_id: int
     is_completed: bool
     created_at: datetime
-    updated_at: datetime
+    updated_at: Optional[datetime] = None
     category: Optional[CategoryResponse] = None
 
     class Config:
@@ -68,7 +68,7 @@ class UserResponse(UserBase):
     id: int
     is_active: bool
     created_at: datetime
-    updated_at: datetime
+    updated_at: Optional[datetime] = None
     deadlines: list[DeadlineResponse] = []
     categories: list[CategoryResponse] = []
 

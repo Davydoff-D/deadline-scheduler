@@ -141,6 +141,21 @@ textarea {
   margin-top: 0.5rem;
 }
 
+.react-datepicker__portal {
+  z-index: 9999 !important;
+  background-color: rgba(15, 23, 42, 0.8) !important;
+  backdrop-filter: blur(4px);
+}
+
+.react-datepicker__portal .react-datepicker {
+  @apply bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl shadow-slate-950/50;
+  display: flex !important;
+  width: max-content;
+  max-width: calc(100vw - 1rem);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  backdrop-filter: blur(8px);
+}
+
 .deadline-datepicker-popper .react-datepicker,
 .react-datepicker {
   @apply bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl shadow-slate-950/50;
