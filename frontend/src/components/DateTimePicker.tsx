@@ -27,8 +27,7 @@ export function DateTimePicker({
       calendarClassName="dark-calendar"
       popperClassName="deadline-datepicker-popper"
       popperPlacement="bottom-start"
-      popperProps={{ strategy: 'fixed', placement: 'bottom-start' }}
-      withPortal
+      popperProps={{ strategy: 'absolute', placement: 'bottom-start' }}
       wrapperClassName="w-full"
       timeCaption="Время"
     />
