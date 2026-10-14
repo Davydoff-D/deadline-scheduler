@@ -1,13 +1,15 @@
 import os
 import logging
 from contextlib import asynccontextmanager
+from collections.abc import AsyncIterator
+from aiogram import Bot
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 from app.database import init_db
 from app.api import router as deadlines_router
 from app.auth.auth_routes import router as auth_router
-from scheduler import start_scheduler, stop_scheduler
+from scheduler import configure_bot, start_scheduler, stop_scheduler
 
 load_dotenv()
 
@@ -20,18 +22,26 @@ logger = logging.getLogger(__name__)
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI):
+async def lifespan(_: FastAPI) -> AsyncIterator[None]:
     """Application lifespan manager."""
     logger.info("Initializing database...")
     init_db()
-    
+
+    bot_token = os.getenv("BOT_TOKEN")
+    if not bot_token:
+        raise ValueError("BOT_TOKEN not found in environment variables")
+    reminder_bot = Bot(token=bot_token)
+    configure_bot(reminder_bot)
+
     logger.info("Starting scheduler...")
     start_scheduler()
-    
-    yield
-    
-    logger.info("Stopping scheduler...")
-    stop_scheduler()
+
+    try:
+        yield
+    finally:
+        logger.info("Stopping scheduler...")
+        stop_scheduler()
+        await reminder_bot.session.close()
 
 
 app = FastAPI(
