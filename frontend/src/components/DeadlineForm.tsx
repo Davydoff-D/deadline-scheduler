@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { DateTimePicker } from './DateTimePicker';
 import type { DeadlineCreate } from '../types';
 
 interface DeadlineFormProps {
@@ -16,13 +17,13 @@ export function DeadlineForm({
 }: DeadlineFormProps) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [dueDate, setDueDate] = useState('');
+  const [dueDate, setDueDate] = useState<Date | null>(null);
   const [priority, setPriority] = useState<'low' | 'medium' | 'high'>('medium');
   const [error, setError] = useState('');
 
   useEffect(() => {
     if (initialDate) {
-      setDueDate(initialDate.toISOString().slice(0, 16));
+      setDueDate(initialDate);
     }
   }, [initialDate]);
 
@@ -44,12 +45,12 @@ export function DeadlineForm({
       await onSubmit({
         title: title.trim(),
         description: description.trim() || undefined,
-        due_date: new Date(dueDate).toISOString(),
+        due_date: dueDate.toISOString(),
         priority,
       });
       setTitle('');
       setDescription('');
-      setDueDate('');
+      setDueDate(null);
       setPriority('medium');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to create deadline');
@@ -98,12 +99,11 @@ export function DeadlineForm({
         <label className="block text-sm font-medium text-slate-300 mb-2">
           Due Date *
         </label>
-        <input
-          type="datetime-local"
-          value={dueDate}
-          onChange={(e) => setDueDate(e.target.value)}
-          className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-slate-100 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+        <DateTimePicker
+          selected={dueDate}
+          onChange={(date) => setDueDate(date)}
           disabled={loading}
+          placeholderText="Select date and time"
         />
       </div>
 
