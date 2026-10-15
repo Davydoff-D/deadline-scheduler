@@ -22,25 +22,22 @@ export function Calendar({
   const calendarRef = useRef(null);
 
   const events = deadlines.map((deadline) => {
-    // Use gray for completed deadlines, otherwise use priority colors
     const priorityColor = deadline.is_completed
-      ? '#64748b'  // slate-500 - gray for completed
+      ? '#64748b'
       : {
-          high: '#dc2626',    // red-600
-          medium: '#f59e0b',  // amber-500
-          low: '#10b981',     // emerald-500
+          high: '#dc2626',
+          medium: '#f59e0b',
+          low: '#10b981',
         }[deadline.priority];
-
-    // Extract date-only string (YYYY-MM-DD) to prevent events from spanning across cells
-    const dateOnly = deadline.due_date.split('T')[0];
 
     return {
       id: deadline.id.toString(),
       title: deadline.title,
-      start: dateOnly,
-      allDay: true,  // Force all-day event to stay in single cell
+      start: deadline.due_date,
+      allDay: true,
       backgroundColor: priorityColor,
       borderColor: priorityColor,
+      classNames: ['deadline-event'],
       extendedProps: {
         deadline,
       },
@@ -59,11 +56,22 @@ export function Calendar({
   const handleEventDrop = async (dropInfo: EventDropArg) => {
     if (!onDeadlineDrop) return;
 
+    console.log('Drop event:', {
+      eventId: dropInfo.event.id,
+      oldStart: dropInfo.oldEvent.start,
+      newStart: dropInfo.event.start,
+    });
+
     try {
       const deadlineId = parseInt(dropInfo.event.id);
-      const newDate = dropInfo.event.start?.toISOString();
-      if (newDate) {
-        await onDeadlineDrop(deadlineId, newDate);
+      const originalDeadline = dropInfo.event.extendedProps.deadline as Deadline;
+      
+      const newDate = dropInfo.event.start;
+      if (newDate && originalDeadline) {
+        const originalTime = new Date(originalDeadline.due_date);
+        newDate.setHours(originalTime.getHours(), originalTime.getMinutes(), 0, 0);
+        console.log('Updating deadline to:', newDate.toISOString());
+        await onDeadlineDrop(deadlineId, newDate.toISOString());
       }
     } catch (error) {
       console.error('Failed to update deadline date:', error);
@@ -72,7 +80,7 @@ export function Calendar({
   };
 
   return (
-    <div className="w-full bg-slate-900/80 backdrop-blur-sm rounded-2xl shadow-2xl shadow-slate-950/50 p-6 border border-slate-800/50">
+    <div className="w-full bg-slate-900/95 rounded-2xl shadow-2xl shadow-slate-950/50 p-6 border border-slate-800/50">
       <FullCalendar
         ref={calendarRef}
         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
@@ -88,6 +96,11 @@ export function Calendar({
         eventClick={handleEventClick}
         editable={true}
         eventDrop={handleEventDrop}
+        eventDragMinDistance={3}
+        dragRevertDuration={150}
+        dragScroll={true}
+        snapDuration="1:00:00"
+        eventOverlap={true}
         height="auto"
         dayMaxEvents={3}
         eventDisplay="block"

@@ -53,8 +53,21 @@ function App() {
   };
 
   const handleUpdateDeadlineDate = async (deadlineId: number, newDate: string) => {
-    await apiClient.updateDeadline(deadlineId, { due_date: newDate });
-    await loadDeadlines();
+    const previousDeadlines = deadlines;
+    
+    setDeadlines(prevDeadlines =>
+      prevDeadlines.map(d =>
+        d.id === deadlineId ? { ...d, due_date: newDate } : d
+      )
+    );
+
+    try {
+      await apiClient.updateDeadline(deadlineId, { due_date: newDate });
+    } catch (err) {
+      setDeadlines(previousDeadlines);
+      console.error('Failed to update deadline:', err);
+      throw err;
+    }
   };
 
   const handleCompleteDeadline = async (id: number) => {

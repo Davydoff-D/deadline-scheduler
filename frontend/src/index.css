@@ -31,6 +31,8 @@ body {
   --fc-today-bg-color: rgba(99, 102, 241, 0.15);
   --fc-neutral-bg-color: #1e293b;
   --fc-page-bg-color: transparent;
+  transform: none !important;
+  will-change: auto !important;
 }
 
 .fc .fc-toolbar-title {
@@ -87,11 +89,30 @@ body {
   @apply rounded-lg border-0 shadow-md;
   padding: 4px 6px !important;
   margin: 2px 4px !important;
+  cursor: grab !important;
 }
 
 .fc .fc-event:hover {
-  @apply shadow-lg cursor-pointer;
+  @apply shadow-lg;
   transform: translateY(-1px);
+  transition: transform 0.15s ease;
+}
+
+.fc .fc-event:active {
+  cursor: grabbing !important;
+}
+
+.fc .fc-event-dragging {
+  opacity: 0.5 !important;
+  cursor: grabbing !important;
+}
+
+.fc .fc-event-mirror {
+  z-index: 9999 !important;
+  opacity: 0.85 !important;
+  cursor: grabbing !important;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5) !important;
+  transform: rotate(3deg) !important;
 }
 
 .fc .fc-event-title {
